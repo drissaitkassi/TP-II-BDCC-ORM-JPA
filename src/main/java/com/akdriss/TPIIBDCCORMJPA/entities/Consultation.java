@@ -1,11 +1,11 @@
 package com.akdriss.TPIIBDCCORMJPA.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
 import java.util.Date;
+
 
 @Entity
 @Getter
@@ -13,18 +13,15 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Patient {
-
+public class Consultation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    @Temporal(TemporalType.DATE)
-    private Date dateNaissanec;
-    private boolean malade;
-    private int score;
-    @OneToMany(mappedBy = "patient")
-    private Collection<RendezVous> rendezVous;
+    private Date dateConsultation;
+    private String rapport;
+    @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private RendezVous rendezVous;
 
 }

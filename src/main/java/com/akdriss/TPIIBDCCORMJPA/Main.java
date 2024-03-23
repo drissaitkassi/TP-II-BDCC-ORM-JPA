@@ -1,7 +1,11 @@
 package com.akdriss.TPIIBDCCORMJPA;
 
-import com.akdriss.TPIIBDCCORMJPA.entities.Patient;
+import com.akdriss.TPIIBDCCORMJPA.entities.*;
 import com.akdriss.TPIIBDCCORMJPA.repositories.PatientRepository;
+import com.akdriss.TPIIBDCCORMJPA.services.ConsultationService;
+import com.akdriss.TPIIBDCCORMJPA.services.MedcinService;
+import com.akdriss.TPIIBDCCORMJPA.services.PatientService;
+import com.akdriss.TPIIBDCCORMJPA.services.RendezVousService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -12,11 +16,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 public class Main  implements CommandLineRunner {
 	@Autowired
-	PatientRepository patientRepository;
+	PatientService patientService;
+	@Autowired
+	MedcinService medcinService;
+	@Autowired
+	ConsultationService consultationService;
+	@Autowired
+	RendezVousService rendezVousService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
@@ -30,7 +41,7 @@ public class Main  implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Patient patient1 =new Patient();
+		/*Patient patient1 =new Patient();
 		patient1.setNom("ahmed");
 		patient1.setMalade(true);
 		patient1.setScore(8);
@@ -77,8 +88,47 @@ public class Main  implements CommandLineRunner {
 		System.out.println("deleting 3rd patient .....");
 		patientRepository.deleteById(1l);
 		System.out.println(patientList);
+*/
 
 
+		Stream.of("hassan","ahmed","mohamed").forEach(name->{
+			int score=10;
+			Patient patient=new Patient();
+			patient.setNom(name);
+			patient.setDateNaissanec(new Date());
+			patient.setScore(score+1);
+			patient.setMalade(Math.random() > 0.5);
+
+			patientService.savePatient(patient);
+		});
+
+		Stream.of("adil","narjis","hamid").forEach(name->{
+			int score=10;
+			Medcin medcin=new Medcin();
+			medcin.setNom(name);
+			medcin.setEmail(name+"@email.com");
+			medcin.setSpetialite(Math.random()<0.5?"Cardio":"Gastro");
+
+			medcinService.saveMedcin(medcin);
+
+		});
+
+
+		Patient patient=patientService.findById(1L).orElse(null);
+		Medcin medcin=medcinService.findById(1L).orElse(null);
+		Consultation consultation=new Consultation(null,new Date(),"rapport consultation 10999",null);
+		RendezVous rendezVous=new RendezVous();
+		rendezVous.setPatient(patient);
+		rendezVous.setMedcin(medcin);
+		rendezVous.setStatuRDV(StatuRDV.PENDING);
+		rendezVous.setDate(new Date());
+		RendezVous savedRendezVous=rendezVousService.saveRendezVous(rendezVous);
+
+
+		RendezVous rendezVous1=rendezVousService.findFirsts();
+
+		consultation.setRendezVous(rendezVous1);
+		consultationService.saveConsultation(consultation);
 
 
 
