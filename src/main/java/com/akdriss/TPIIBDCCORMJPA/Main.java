@@ -22,7 +22,11 @@ public class Main  implements CommandLineRunner {
 		SpringApplication.run(Main.class, args);
 	}
 
-
+	/**
+	 * FIRST PART OF THE ASSIGNMENT
+	 * @param args
+	 * @throws Exception
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 
